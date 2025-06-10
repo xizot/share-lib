@@ -1,5 +1,9 @@
 import { z } from 'zod';
-export { A as ApiResponse, a as ApiResponseSchema, E as ErrorResponse, c as ErrorResponseSchema, e as PaginatedResponse, b as PaginatedResponseSchema, f as Pagination, P as PaginationSchema, S as SuccessResponse, d as SuccessResponseSchema } from '../api.schema-BUIZQ9X0.js';
+import { ClassValue } from 'clsx';
+import * as react_jsx_runtime from 'react/jsx-runtime';
+import * as class_variance_authority_dist_types from 'class-variance-authority/dist/types';
+import * as React from 'react';
+import { VariantProps } from 'class-variance-authority';
 
 declare const UserSchema: z.ZodObject<{
     id: z.ZodString;
@@ -309,4 +313,275 @@ type CreateProduct = z.infer<typeof CreateProductSchema>;
 type UpdateProduct = z.infer<typeof UpdateProductSchema>;
 type ProductFilter = z.infer<typeof ProductFilterSchema>;
 
-export { type CreateProduct, CreateProductSchema, type CreateUser, CreateUserSchema, type Product, type ProductFilter, ProductFilterSchema, ProductSchema, type UpdateProduct, UpdateProductSchema, type UpdateUser, UpdateUserSchema, type User, UserSchema };
+declare const ApiResponseSchema: z.ZodObject<{
+    success: z.ZodBoolean;
+    message: z.ZodString;
+    data: z.ZodOptional<z.ZodUnknown>;
+    error: z.ZodOptional<z.ZodObject<{
+        code: z.ZodString;
+        message: z.ZodString;
+        details: z.ZodOptional<z.ZodUnknown>;
+    }, "strip", z.ZodTypeAny, {
+        code: string;
+        message: string;
+        details?: unknown;
+    }, {
+        code: string;
+        message: string;
+        details?: unknown;
+    }>>;
+    timestamp: z.ZodDate;
+}, "strip", z.ZodTypeAny, {
+    message: string;
+    success: boolean;
+    timestamp: Date;
+    data?: unknown;
+    error?: {
+        code: string;
+        message: string;
+        details?: unknown;
+    } | undefined;
+}, {
+    message: string;
+    success: boolean;
+    timestamp: Date;
+    data?: unknown;
+    error?: {
+        code: string;
+        message: string;
+        details?: unknown;
+    } | undefined;
+}>;
+declare const PaginationSchema: z.ZodObject<{
+    page: z.ZodDefault<z.ZodNumber>;
+    limit: z.ZodDefault<z.ZodNumber>;
+    total: z.ZodNumber;
+    totalPages: z.ZodNumber;
+}, "strip", z.ZodTypeAny, {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+}, {
+    total: number;
+    totalPages: number;
+    page?: number | undefined;
+    limit?: number | undefined;
+}>;
+declare const PaginatedResponseSchema: z.ZodObject<{
+    success: z.ZodBoolean;
+    message: z.ZodString;
+    error: z.ZodOptional<z.ZodObject<{
+        code: z.ZodString;
+        message: z.ZodString;
+        details: z.ZodOptional<z.ZodUnknown>;
+    }, "strip", z.ZodTypeAny, {
+        code: string;
+        message: string;
+        details?: unknown;
+    }, {
+        code: string;
+        message: string;
+        details?: unknown;
+    }>>;
+    timestamp: z.ZodDate;
+} & {
+    data: z.ZodObject<{
+        items: z.ZodArray<z.ZodUnknown, "many">;
+        pagination: z.ZodObject<{
+            page: z.ZodDefault<z.ZodNumber>;
+            limit: z.ZodDefault<z.ZodNumber>;
+            total: z.ZodNumber;
+            totalPages: z.ZodNumber;
+        }, "strip", z.ZodTypeAny, {
+            page: number;
+            limit: number;
+            total: number;
+            totalPages: number;
+        }, {
+            total: number;
+            totalPages: number;
+            page?: number | undefined;
+            limit?: number | undefined;
+        }>;
+    }, "strip", z.ZodTypeAny, {
+        items: unknown[];
+        pagination: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPages: number;
+        };
+    }, {
+        items: unknown[];
+        pagination: {
+            total: number;
+            totalPages: number;
+            page?: number | undefined;
+            limit?: number | undefined;
+        };
+    }>;
+}, "strip", z.ZodTypeAny, {
+    message: string;
+    success: boolean;
+    data: {
+        items: unknown[];
+        pagination: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPages: number;
+        };
+    };
+    timestamp: Date;
+    error?: {
+        code: string;
+        message: string;
+        details?: unknown;
+    } | undefined;
+}, {
+    message: string;
+    success: boolean;
+    data: {
+        items: unknown[];
+        pagination: {
+            total: number;
+            totalPages: number;
+            page?: number | undefined;
+            limit?: number | undefined;
+        };
+    };
+    timestamp: Date;
+    error?: {
+        code: string;
+        message: string;
+        details?: unknown;
+    } | undefined;
+}>;
+declare const ErrorResponseSchema: z.ZodObject<{
+    success: z.ZodLiteral<false>;
+    message: z.ZodString;
+    error: z.ZodObject<{
+        code: z.ZodString;
+        message: z.ZodString;
+        details: z.ZodOptional<z.ZodUnknown>;
+    }, "strip", z.ZodTypeAny, {
+        code: string;
+        message: string;
+        details?: unknown;
+    }, {
+        code: string;
+        message: string;
+        details?: unknown;
+    }>;
+    timestamp: z.ZodDate;
+}, "strip", z.ZodTypeAny, {
+    message: string;
+    success: false;
+    error: {
+        code: string;
+        message: string;
+        details?: unknown;
+    };
+    timestamp: Date;
+}, {
+    message: string;
+    success: false;
+    error: {
+        code: string;
+        message: string;
+        details?: unknown;
+    };
+    timestamp: Date;
+}>;
+declare const SuccessResponseSchema: z.ZodObject<{
+    success: z.ZodLiteral<true>;
+    message: z.ZodString;
+    data: z.ZodOptional<z.ZodUnknown>;
+    timestamp: z.ZodDate;
+}, "strip", z.ZodTypeAny, {
+    message: string;
+    success: true;
+    timestamp: Date;
+    data?: unknown;
+}, {
+    message: string;
+    success: true;
+    timestamp: Date;
+    data?: unknown;
+}>;
+type ApiResponse<T = unknown> = {
+    success: boolean;
+    message: string;
+    data?: T;
+    error?: {
+        code: string;
+        message: string;
+        details?: unknown;
+    };
+    timestamp: Date;
+};
+type PaginatedResponse<T = unknown> = {
+    success: boolean;
+    message: string;
+    data: {
+        items: T[];
+        pagination: Pagination;
+    };
+    timestamp: Date;
+};
+type Pagination = z.infer<typeof PaginationSchema>;
+type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
+type SuccessResponse<T = unknown> = Omit<z.infer<typeof SuccessResponseSchema>, 'data'> & {
+    data?: T;
+};
+
+declare function cn(...inputs: ClassValue[]): string;
+
+declare function formatPrice(price: number, currency?: 'USD' | 'EUR' | 'VND'): string;
+declare function formatDate(date: Date, locale?: string): string;
+declare function formatDateTime(date: Date, locale?: string): string;
+declare function generateId(): string;
+declare function slugify(text: string): string;
+declare function capitalize(text: string): string;
+declare function truncate(text: string, maxLength: number): string;
+declare function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void;
+declare function throttle<T extends (...args: any[]) => void>(func: T, limit: number): (...args: Parameters<T>) => void;
+declare function isEmail(email: string): boolean;
+declare function isUrl(url: string): boolean;
+declare function omit<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K>;
+declare function pick<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Pick<T, K>;
+
+declare class ValidationError extends Error {
+    errors: z.ZodError;
+    constructor(message: string, errors: z.ZodError);
+}
+declare function validateSchema<T>(schema: z.ZodSchema<T>, data: unknown): {
+    success: true;
+    data: T;
+} | {
+    success: false;
+    error: z.ZodError;
+};
+declare function validateSchemaOrThrow<T>(schema: z.ZodSchema<T>, data: unknown): T;
+declare function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown): {
+    data: T | null;
+    errors: string[];
+};
+declare function createApiResponse<T = unknown>(success: boolean, message: string, data?: T, error?: {
+    code: string;
+    message: string;
+    details?: unknown;
+}): ApiResponse<T>;
+declare function createSuccessResponse<T = unknown>(message: string, data?: T): SuccessResponse<T>;
+declare function createErrorResponse(message: string, code: string, details?: unknown): ErrorResponse;
+
+declare const buttonVariants: (props?: ({
+    variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | null | undefined;
+    size?: "default" | "sm" | "lg" | "icon" | null | undefined;
+} & class_variance_authority_dist_types.ClassProp) | undefined) => string;
+declare function Button({ className, variant, size, asChild, ...props }: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+}): react_jsx_runtime.JSX.Element;
+
+export { type ApiResponse, ApiResponseSchema, Button, type CreateProduct, CreateProductSchema, type CreateUser, CreateUserSchema, type ErrorResponse, ErrorResponseSchema, type PaginatedResponse, PaginatedResponseSchema, type Pagination, PaginationSchema, type Product, type ProductFilter, ProductFilterSchema, ProductSchema, type SuccessResponse, SuccessResponseSchema, type UpdateProduct, UpdateProductSchema, type UpdateUser, UpdateUserSchema, type User, UserSchema, ValidationError, buttonVariants, capitalize, cn, createApiResponse, createErrorResponse, createSuccessResponse, debounce, formatDate, formatDateTime, formatPrice, generateId, isEmail, isUrl, omit, pick, safeValidate, slugify, throttle, truncate, validateSchema, validateSchemaOrThrow };
