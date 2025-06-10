@@ -1,5 +1,5 @@
 {
-  "name": "shared-lib",
+  "name": "@vm/shared-lib",
   "version": "1.0.0",
   "description": "Shared library for Next.js projects with shadcn/ui components, Zod schemas, hooks, and utilities",
   "main": "./dist/index.js",
