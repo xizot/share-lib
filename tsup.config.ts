@@ -8,9 +8,10 @@ export default defineConfig({
     'src/components/index.ts'
   ],
   format: ['esm', 'cjs'],
-  dts: true,
+  dts: false,
   clean: true,
-  sourcemap: true,
+  sourcemap: false,
+  minify: true,
   treeshake: true,
   splitting: false,
   outDir: 'dist',
