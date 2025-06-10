@@ -1,1 +1,460 @@
-import {z as z$1}from'zod';import {clsx}from'clsx';import {twMerge}from'tailwind-merge';import {Slot}from'@radix-ui/react-slot';import {cva}from'class-variance-authority';import {jsx}from'react/jsx-runtime';var m=z$1.object({id:z$1.string().uuid(),email:z$1.string().email("Invalid email address"),username:z$1.string().min(3,"Username must be at least 3 characters").max(20,"Username must be at most 20 characters"),fullName:z$1.string().min(1,"Full name is required").max(100,"Full name must be at most 100 characters"),avatar:z$1.string().url().optional(),role:z$1.enum(["admin","user","moderator"]).default("user"),isActive:z$1.boolean().default(true),createdAt:z$1.date(),updatedAt:z$1.date()}),w=m.omit({id:true,createdAt:true,updatedAt:true}),U=m.partial().omit({id:true,createdAt:true});var p=z$1.object({id:z$1.string().uuid(),name:z$1.string().min(1,"Product name is required").max(200,"Product name must be at most 200 characters"),description:z$1.string().min(10,"Description must be at least 10 characters").max(1e3,"Description must be at most 1000 characters"),price:z$1.number().positive("Price must be positive"),currency:z$1.enum(["USD","EUR","VND"]).default("USD"),category:z$1.string().min(1,"Category is required"),tags:z$1.array(z$1.string()).default([]),images:z$1.array(z$1.string().url()).default([]),inStock:z$1.boolean().default(true),stockQuantity:z$1.number().int().min(0,"Stock quantity must be non-negative").default(0),weight:z$1.number().positive().optional(),dimensions:z$1.object({length:z$1.number().positive(),width:z$1.number().positive(),height:z$1.number().positive()}).optional(),isActive:z$1.boolean().default(true),createdAt:z$1.date(),updatedAt:z$1.date()}),R=p.omit({id:true,createdAt:true,updatedAt:true}),z=p.partial().omit({id:true,createdAt:true}),D=z$1.object({category:z$1.string().optional(),minPrice:z$1.number().positive().optional(),maxPrice:z$1.number().positive().optional(),inStock:z$1.boolean().optional(),tags:z$1.array(z$1.string()).optional()});var l=z$1.object({success:z$1.boolean(),message:z$1.string(),data:z$1.unknown().optional(),error:z$1.object({code:z$1.string(),message:z$1.string(),details:z$1.unknown().optional()}).optional(),timestamp:z$1.date()}),g=z$1.object({page:z$1.number().int().min(1,"Page must be at least 1").default(1),limit:z$1.number().int().min(1,"Limit must be at least 1").max(100,"Limit must be at most 100").default(10),total:z$1.number().int().min(0,"Total must be non-negative"),totalPages:z$1.number().int().min(0,"Total pages must be non-negative")}),C=l.extend({data:z$1.object({items:z$1.array(z$1.unknown()),pagination:g})}),V=z$1.object({success:z$1.literal(false),message:z$1.string(),error:z$1.object({code:z$1.string(),message:z$1.string(),details:z$1.unknown().optional()}),timestamp:z$1.date()}),j=z$1.object({success:z$1.literal(true),message:z$1.string(),data:z$1.unknown().optional(),timestamp:z$1.date()});function d(...e){return twMerge(clsx(e))}function $(e,r="USD"){return {USD:new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}),EUR:new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}),VND:new Intl.NumberFormat("vi-VN",{style:"currency",currency:"VND"})}[r].format(e)}function O(e,r="en-US"){return new Intl.DateTimeFormat(r,{year:"numeric",month:"long",day:"numeric"}).format(e)}function B(e,r="en-US"){return new Intl.DateTimeFormat(r,{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}).format(e)}function M(){return crypto.randomUUID()}function Q(e){return e.toLowerCase().replace(/[^\w\s-]/g,"").replace(/[\s_-]+/g,"-").replace(/^-+|-+$/g,"")}function G(e){return e.charAt(0).toUpperCase()+e.slice(1).toLowerCase()}function H(e,r){return e.length<=r?e:e.slice(0,r-3)+"..."}function J(e,r){let t;return (...a)=>{clearTimeout(t),t=setTimeout(()=>e(...a),r);}}function W(e,r){let t;return (...a)=>{t||(e(...a),t=true,setTimeout(()=>t=false,r));}}function X(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}function Y(e){try{return new URL(e),!0}catch{return  false}}function ee(e,r){let t={...e};return r.forEach(a=>delete t[a]),t}function te(e,r){let t={};return r.forEach(a=>{a in e&&(t[a]=e[a]);}),t}var c=class extends Error{constructor(t,a){super(t);this.errors=a;this.name="ValidationError";}};function oe(e,r){try{return {success:!0,data:e.parse(r)}}catch(t){if(t instanceof z$1.ZodError)return {success:false,error:t};throw t}}function ae(e,r){try{return e.parse(r)}catch(t){throw t instanceof z$1.ZodError?new c("Validation failed",t):t}}function se(e,r){try{return {data:e.parse(r),errors:[]}}catch(t){return t instanceof z$1.ZodError?{data:null,errors:t.errors.map(i=>`${i.path.join(".")}: ${i.message}`)}:{data:null,errors:["Unknown validation error"]}}}function ie(e,r,t,a){return {success:e,message:r,data:t,error:a,timestamp:new Date}}function ce(e,r){return {success:true,message:e,data:r,timestamp:new Date}}function ue(e,r,t){return {success:false,message:e,error:{code:r,message:e,details:t},timestamp:new Date}}var y=cva("inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",{variants:{variant:{default:"bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",destructive:"bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",outline:"border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",secondary:"bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",ghost:"hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",link:"text-primary underline-offset-4 hover:underline"},size:{default:"h-9 px-4 py-2 has-[>svg]:px-3",sm:"h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",lg:"h-10 rounded-md px-6 has-[>svg]:px-4",icon:"size-9"}},defaultVariants:{variant:"default",size:"default"}});function he({className:e,variant:r,size:t,asChild:a=false,...i}){return jsx(a?Slot:"button",{"data-slot":"button",className:d(y({variant:r,size:t,className:e})),...i})}export{l as ApiResponseSchema,he as Button,R as CreateProductSchema,w as CreateUserSchema,V as ErrorResponseSchema,C as PaginatedResponseSchema,g as PaginationSchema,D as ProductFilterSchema,p as ProductSchema,j as SuccessResponseSchema,z as UpdateProductSchema,U as UpdateUserSchema,m as UserSchema,c as ValidationError,y as buttonVariants,G as capitalize,d as cn,ie as createApiResponse,ue as createErrorResponse,ce as createSuccessResponse,J as debounce,O as formatDate,B as formatDateTime,$ as formatPrice,M as generateId,X as isEmail,Y as isUrl,ee as omit,te as pick,se as safeValidate,Q as slugify,W as throttle,H as truncate,oe as validateSchema,ae as validateSchemaOrThrow};
+"use client";
+
+// src/components/ui/button.tsx
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva } from "class-variance-authority";
+
+// src/utils/cn.ts
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+function cn(...inputs) {
+  return twMerge(clsx(inputs));
+}
+
+// src/components/ui/button.tsx
+var buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline"
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10"
+      }
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default"
+    }
+  }
+);
+var Button = React.forwardRef(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return /* @__PURE__ */ React.createElement(
+      Comp,
+      {
+        className: cn(buttonVariants({ variant, size, className })),
+        ref,
+        ...props
+      }
+    );
+  }
+);
+Button.displayName = "Button";
+
+// src/components/ui/input.tsx
+import * as React2 from "react";
+var Input = React2.forwardRef(
+  ({ className, type, ...props }, ref) => {
+    return /* @__PURE__ */ React2.createElement(
+      "input",
+      {
+        type,
+        className: cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          className
+        ),
+        ref,
+        ...props
+      }
+    );
+  }
+);
+Input.displayName = "Input";
+
+// src/components/ui/card.tsx
+import * as React3 from "react";
+var Card = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ React3.createElement(
+  "div",
+  {
+    ref,
+    className: cn(
+      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      className
+    ),
+    ...props
+  }
+));
+Card.displayName = "Card";
+var CardHeader = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ React3.createElement(
+  "div",
+  {
+    ref,
+    className: cn("flex flex-col space-y-1.5 p-6", className),
+    ...props
+  }
+));
+CardHeader.displayName = "CardHeader";
+var CardTitle = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ React3.createElement(
+  "h3",
+  {
+    ref,
+    className: cn(
+      "text-2xl font-semibold leading-none tracking-tight",
+      className
+    ),
+    ...props
+  }
+));
+CardTitle.displayName = "CardTitle";
+var CardDescription = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ React3.createElement(
+  "p",
+  {
+    ref,
+    className: cn("text-sm text-muted-foreground", className),
+    ...props
+  }
+));
+CardDescription.displayName = "CardDescription";
+var CardContent = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ React3.createElement("div", { ref, className: cn("p-6 pt-0", className), ...props }));
+CardContent.displayName = "CardContent";
+var CardFooter = React3.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ React3.createElement(
+  "div",
+  {
+    ref,
+    className: cn("flex items-center p-6 pt-0", className),
+    ...props
+  }
+));
+CardFooter.displayName = "CardFooter";
+
+// src/components/ui/label.tsx
+import * as React4 from "react";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { cva as cva2 } from "class-variance-authority";
+var labelVariants = cva2(
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+);
+var Label = React4.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ React4.createElement(
+  LabelPrimitive.Root,
+  {
+    ref,
+    className: cn(labelVariants(), className),
+    ...props
+  }
+));
+Label.displayName = LabelPrimitive.Root.displayName;
+
+// src/schemas/auth.ts
+import { z } from "zod";
+var loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters")
+});
+var registerSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required")
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"]
+});
+var forgotPasswordSchema = z.object({
+  email: z.string().email("Invalid email address")
+});
+var resetPasswordSchema = z.object({
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+  token: z.string().min(1, "Token is required")
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"]
+});
+var userProfileSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().optional(),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  website: z.string().url("Invalid URL").optional().or(z.literal(""))
+});
+
+// src/schemas/common.ts
+import { z as z2 } from "zod";
+var idSchema = z2.string().uuid("Invalid ID format");
+var paginationSchema = z2.object({
+  page: z2.number().min(1, "Page must be at least 1").default(1),
+  limit: z2.number().min(1, "Limit must be at least 1").max(100, "Limit cannot exceed 100").default(10),
+  sortBy: z2.string().optional(),
+  sortOrder: z2.enum(["asc", "desc"]).default("desc")
+});
+var timestampSchema = z2.object({
+  createdAt: z2.date(),
+  updatedAt: z2.date()
+});
+var contactSchema = z2.object({
+  name: z2.string().min(1, "Name is required"),
+  email: z2.string().email("Invalid email address"),
+  phone: z2.string().optional(),
+  message: z2.string().min(1, "Message is required").max(1e3, "Message must be less than 1000 characters")
+});
+var addressSchema = z2.object({
+  street: z2.string().min(1, "Street is required"),
+  city: z2.string().min(1, "City is required"),
+  state: z2.string().min(1, "State is required"),
+  postalCode: z2.string().min(1, "Postal code is required"),
+  country: z2.string().min(1, "Country is required")
+});
+var fileUploadSchema = z2.object({
+  file: z2.instanceof(File, { message: "Invalid file" }),
+  maxSize: z2.number().default(5 * 1024 * 1024),
+  // 5MB
+  allowedTypes: z2.array(z2.string()).default(["image/jpeg", "image/png", "image/gif"])
+});
+var statusSchema = z2.enum(["active", "inactive", "pending", "archived"]);
+
+// src/hooks/use-local-storage.ts
+import { useState } from "react";
+function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    if (typeof window === "undefined") {
+      return initialValue;
+    }
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.log(error);
+      return initialValue;
+    }
+  });
+  const setValue = (value) => {
+    try {
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return [storedValue, setValue];
+}
+
+// src/hooks/use-debounce.ts
+import { useState as useState2, useEffect as useEffect2 } from "react";
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState2(value);
+  useEffect2(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  return debouncedValue;
+}
+
+// src/hooks/use-toggle.ts
+import { useState as useState3, useCallback } from "react";
+function useToggle(initialValue = false) {
+  const [value, setValue] = useState3(initialValue);
+  const toggle = useCallback(() => setValue((v) => !v), []);
+  const setToggle = useCallback((newValue) => setValue(newValue), []);
+  return [value, toggle, setToggle];
+}
+
+// src/hooks/use-api.ts
+import { useState as useState4, useEffect as useEffect3, useCallback as useCallback2 } from "react";
+function useApi(apiFunction, options = {}) {
+  const { immediate = false } = options;
+  const [data, setData] = useState4(null);
+  const [loading, setLoading] = useState4(immediate);
+  const [error, setError] = useState4(null);
+  const execute = useCallback2(async (...args) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await apiFunction(...args);
+      setData(result);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  }, [apiFunction]);
+  useEffect3(() => {
+    if (immediate) {
+      execute();
+    }
+  }, [execute, immediate]);
+  return { data, loading, error, execute };
+}
+
+// src/utils/formatters.ts
+function formatCurrency(amount, currency = "USD", locale = "en-US") {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency
+  }).format(amount);
+}
+function formatDate(date, options = {}, locale = "en-US") {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    ...options
+  }).format(dateObj);
+}
+function formatRelativeTime(date) {
+  const now = /* @__PURE__ */ new Date();
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  const diffInSeconds = Math.floor((now.getTime() - dateObj.getTime()) / 1e3);
+  if (diffInSeconds < 60) return "just now";
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+  if (diffInSeconds < 2592e3) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  return formatDate(dateObj);
+}
+function formatFileSize(bytes) {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+}
+function formatPhoneNumber(phoneNumber) {
+  const cleaned = phoneNumber.replace(/\D/g, "");
+  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    return `(${match[1]}) ${match[2]}-${match[3]}`;
+  }
+  return phoneNumber;
+}
+function truncateText(text, maxLength) {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "...";
+}
+function capitalizeFirst(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+function formatInitials(firstName, lastName) {
+  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+}
+
+// src/utils/validators.ts
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+function isValidPhoneNumber(phone) {
+  const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/;
+  return phoneRegex.test(phone);
+}
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function isValidPassword(password, minLength = 6) {
+  return password.length >= minLength;
+}
+function isStrongPassword(password) {
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  const isLongEnough = password.length >= 8;
+  return hasLowerCase && hasUpperCase && hasNumber && hasSpecialChar && isLongEnough;
+}
+function isValidCreditCard(cardNumber) {
+  const cleaned = cardNumber.replace(/\D/g, "");
+  if (cleaned.length < 13 || cleaned.length > 19) {
+    return false;
+  }
+  let sum = 0;
+  let isEven = false;
+  for (let i = cleaned.length - 1; i >= 0; i--) {
+    let digit = parseInt(cleaned.charAt(i), 10);
+    if (isEven) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
+      }
+    }
+    sum += digit;
+    isEven = !isEven;
+  }
+  return sum % 10 === 0;
+}
+function isValidPostalCode(postalCode, country = "US") {
+  const patterns = {
+    US: /^\d{5}(-\d{4})?$/,
+    CA: /^[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d$/,
+    UK: /^[A-Za-z]{1,2}\d[A-Za-z\d]? \d[A-Za-z]{2}$/
+  };
+  const pattern = patterns[country];
+  return pattern ? pattern.test(postalCode) : true;
+}
+function isEmpty(value) {
+  if (value === null || value === void 0) return true;
+  if (typeof value === "string") return value.trim().length === 0;
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === "object") return Object.keys(value).length === 0;
+  return false;
+}
+export {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  addressSchema,
+  buttonVariants,
+  capitalizeFirst,
+  cn,
+  contactSchema,
+  fileUploadSchema,
+  forgotPasswordSchema,
+  formatCurrency,
+  formatDate,
+  formatFileSize,
+  formatInitials,
+  formatPhoneNumber,
+  formatRelativeTime,
+  idSchema,
+  isEmpty,
+  isStrongPassword,
+  isValidCreditCard,
+  isValidEmail,
+  isValidPassword,
+  isValidPhoneNumber,
+  isValidPostalCode,
+  isValidUrl,
+  loginSchema,
+  paginationSchema,
+  registerSchema,
+  resetPasswordSchema,
+  statusSchema,
+  timestampSchema,
+  truncateText,
+  useApi,
+  useDebounce,
+  useLocalStorage,
+  useToggle,
+  userProfileSchema
+};
+//# sourceMappingURL=index.mjs.map
