@@ -1,4 +1,6 @@
-import { jsxs, jsx } from 'react/jsx-runtime';
+'use strict';
+
+var jsxRuntime = require('react/jsx-runtime');
 
 // src/components/Button.tsx
 var Button = ({
@@ -25,14 +27,14 @@ var Button = ({
   };
   const widthClass = fullWidth ? "w-full" : "";
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${widthClass} ${className}`.trim();
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsxRuntime.jsxs(
     "button",
     {
       className: classes,
       disabled: disabled || loading,
       ...props,
       children: [
-        loading && /* @__PURE__ */ jsxs(
+        loading && /* @__PURE__ */ jsxRuntime.jsxs(
           "svg",
           {
             className: "mr-2 h-4 w-4 animate-spin",
@@ -40,7 +42,7 @@ var Button = ({
             fill: "none",
             viewBox: "0 0 24 24",
             children: [
-              /* @__PURE__ */ jsx(
+              /* @__PURE__ */ jsxRuntime.jsx(
                 "circle",
                 {
                   className: "opacity-25",
@@ -51,7 +53,7 @@ var Button = ({
                   strokeWidth: "4"
                 }
               ),
-              /* @__PURE__ */ jsx(
+              /* @__PURE__ */ jsxRuntime.jsx(
                 "path",
                 {
                   className: "opacity-75",
@@ -87,7 +89,7 @@ var Card = ({
     lg: "shadow-lg"
   };
   const classes = `${baseClasses} ${paddingClasses[padding]} ${shadowClasses[shadow]} ${className}`.trim();
-  return /* @__PURE__ */ jsx("div", { className: classes, children });
+  return /* @__PURE__ */ jsxRuntime.jsx("div", { className: classes, children });
 };
 var Modal = ({
   isOpen,
@@ -103,15 +105,17 @@ var Modal = ({
     lg: "max-w-2xl",
     xl: "max-w-4xl"
   };
-  return /* @__PURE__ */ jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4", children: [
-    /* @__PURE__ */ jsx("div", { className: "fixed inset-0 bg-black bg-opacity-50", onClick: onClose }),
-    /* @__PURE__ */ jsxs("div", { className: `relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full ${sizeClasses[size]}`, children: [
-      title && /* @__PURE__ */ jsx("div", { className: "px-6 py-4 border-b border-gray-200 dark:border-gray-700", children: /* @__PURE__ */ jsx("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: title }) }),
-      /* @__PURE__ */ jsx("div", { className: "p-6", children })
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4", children: [
+    /* @__PURE__ */ jsxRuntime.jsx("div", { className: "fixed inset-0 bg-black bg-opacity-50", onClick: onClose }),
+    /* @__PURE__ */ jsxRuntime.jsxs("div", { className: `relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full ${sizeClasses[size]}`, children: [
+      title && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "px-6 py-4 border-b border-gray-200 dark:border-gray-700", children: /* @__PURE__ */ jsxRuntime.jsx("h2", { className: "text-xl font-semibold text-gray-900 dark:text-white", children: title }) }),
+      /* @__PURE__ */ jsxRuntime.jsx("div", { className: "p-6", children })
     ] })
   ] });
 };
 
-export { Button, Card, Modal };
-//# sourceMappingURL=components.mjs.map
-//# sourceMappingURL=components.mjs.map
+exports.Button = Button;
+exports.Card = Card;
+exports.Modal = Modal;
+//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.js.map

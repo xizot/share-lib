@@ -68,5 +68,5 @@ exports.registerSchema = registerSchema;
 exports.themeConfigSchema = themeConfigSchema;
 exports.updateUserSchema = updateUserSchema;
 exports.userSchema = userSchema;
-//# sourceMappingURL=schemas.js.map
-//# sourceMappingURL=schemas.js.map
+//# sourceMappingURL=index.js.map
+//# sourceMappingURL=index.js.map

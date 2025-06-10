@@ -1,5 +1,3 @@
-'use strict';
-
 // src/utils/index.ts
 var formatDate = (date, format = "short") => {
   const d = new Date(date);
@@ -143,22 +141,6 @@ var storage = {
   }
 };
 
-exports.capitalize = capitalize;
-exports.debounce = debounce;
-exports.delay = delay;
-exports.formatDate = formatDate;
-exports.groupBy = groupBy;
-exports.isEmail = isEmail;
-exports.isPhoneNumber = isPhoneNumber;
-exports.isUrl = isUrl;
-exports.omit = omit;
-exports.pick = pick;
-exports.slugify = slugify;
-exports.sortBy = sortBy;
-exports.storage = storage;
-exports.throttle = throttle;
-exports.timeAgo = timeAgo;
-exports.truncate = truncate;
-exports.unique = unique;
-//# sourceMappingURL=utils.js.map
-//# sourceMappingURL=utils.js.map
+export { capitalize, debounce, delay, formatDate, groupBy, isEmail, isPhoneNumber, isUrl, omit, pick, slugify, sortBy, storage, throttle, timeAgo, truncate, unique };
+//# sourceMappingURL=index.mjs.map
+//# sourceMappingURL=index.mjs.map
