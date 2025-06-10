@@ -2,71 +2,115 @@
 
 var zod = require('zod');
 
-// src/schemas/index.ts
-var userSchema = zod.z.object({
+// src/schemas/user.schema.ts
+var UserSchema = zod.z.object({
   id: zod.z.string().uuid(),
-  email: zod.z.string().email(),
-  name: zod.z.string().min(2).max(50),
+  email: zod.z.string().email("Invalid email address"),
+  username: zod.z.string().min(3, "Username must be at least 3 characters").max(20, "Username must be at most 20 characters"),
+  fullName: zod.z.string().min(1, "Full name is required").max(100, "Full name must be at most 100 characters"),
   avatar: zod.z.string().url().optional(),
-  role: zod.z.enum(["admin", "user", "moderator"]),
-  createdAt: zod.z.string().datetime(),
-  updatedAt: zod.z.string().datetime()
+  role: zod.z.enum(["admin", "user", "moderator"]).default("user"),
+  isActive: zod.z.boolean().default(true),
+  createdAt: zod.z.date(),
+  updatedAt: zod.z.date()
 });
-var createUserSchema = userSchema.omit({
+var CreateUserSchema = UserSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true
 });
-var updateUserSchema = createUserSchema.partial();
-var loginSchema = zod.z.object({
-  email: zod.z.string().email("Invalid email address"),
-  password: zod.z.string().min(6, "Password must be at least 6 characters")
+var UpdateUserSchema = UserSchema.partial().omit({
+  id: true,
+  createdAt: true
 });
-var registerSchema = loginSchema.extend({
-  name: zod.z.string().min(2, "Name must be at least 2 characters"),
-  confirmPassword: zod.z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"]
+var ProductSchema = zod.z.object({
+  id: zod.z.string().uuid(),
+  name: zod.z.string().min(1, "Product name is required").max(200, "Product name must be at most 200 characters"),
+  description: zod.z.string().min(10, "Description must be at least 10 characters").max(1e3, "Description must be at most 1000 characters"),
+  price: zod.z.number().positive("Price must be positive"),
+  currency: zod.z.enum(["USD", "EUR", "VND"]).default("USD"),
+  category: zod.z.string().min(1, "Category is required"),
+  tags: zod.z.array(zod.z.string()).default([]),
+  images: zod.z.array(zod.z.string().url()).default([]),
+  inStock: zod.z.boolean().default(true),
+  stockQuantity: zod.z.number().int().min(0, "Stock quantity must be non-negative").default(0),
+  weight: zod.z.number().positive().optional(),
+  dimensions: zod.z.object({
+    length: zod.z.number().positive(),
+    width: zod.z.number().positive(),
+    height: zod.z.number().positive()
+  }).optional(),
+  isActive: zod.z.boolean().default(true),
+  createdAt: zod.z.date(),
+  updatedAt: zod.z.date()
 });
-var apiResponseSchema = (dataSchema) => zod.z.object({
-  data: dataSchema,
-  message: zod.z.string(),
+var CreateProductSchema = ProductSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+var UpdateProductSchema = ProductSchema.partial().omit({
+  id: true,
+  createdAt: true
+});
+var ProductFilterSchema = zod.z.object({
+  category: zod.z.string().optional(),
+  minPrice: zod.z.number().positive().optional(),
+  maxPrice: zod.z.number().positive().optional(),
+  inStock: zod.z.boolean().optional(),
+  tags: zod.z.array(zod.z.string()).optional()
+});
+var ApiResponseSchema = zod.z.object({
   success: zod.z.boolean(),
-  error: zod.z.string().optional()
-});
-var paginatedResponseSchema = (itemSchema) => zod.z.object({
-  data: zod.z.array(itemSchema),
   message: zod.z.string(),
-  success: zod.z.boolean(),
-  error: zod.z.string().optional(),
-  pagination: zod.z.object({
-    page: zod.z.number().int().positive(),
-    limit: zod.z.number().int().positive(),
-    total: zod.z.number().int().nonnegative(),
-    totalPages: zod.z.number().int().nonnegative()
+  data: zod.z.unknown().optional(),
+  error: zod.z.object({
+    code: zod.z.string(),
+    message: zod.z.string(),
+    details: zod.z.unknown().optional()
+  }).optional(),
+  timestamp: zod.z.date()
+});
+var PaginationSchema = zod.z.object({
+  page: zod.z.number().int().min(1, "Page must be at least 1").default(1),
+  limit: zod.z.number().int().min(1, "Limit must be at least 1").max(100, "Limit must be at most 100").default(10),
+  total: zod.z.number().int().min(0, "Total must be non-negative"),
+  totalPages: zod.z.number().int().min(0, "Total pages must be non-negative")
+});
+var PaginatedResponseSchema = ApiResponseSchema.extend({
+  data: zod.z.object({
+    items: zod.z.array(zod.z.unknown()),
+    pagination: PaginationSchema
   })
 });
-var contactFormSchema = zod.z.object({
-  name: zod.z.string().min(2, "Name is required"),
-  email: zod.z.string().email("Invalid email address"),
-  subject: zod.z.string().min(5, "Subject must be at least 5 characters"),
-  message: zod.z.string().min(10, "Message must be at least 10 characters")
+var ErrorResponseSchema = zod.z.object({
+  success: zod.z.literal(false),
+  message: zod.z.string(),
+  error: zod.z.object({
+    code: zod.z.string(),
+    message: zod.z.string(),
+    details: zod.z.unknown().optional()
+  }),
+  timestamp: zod.z.date()
 });
-var themeConfigSchema = zod.z.object({
-  theme: zod.z.enum(["light", "dark", "system"]),
-  primaryColor: zod.z.string().regex(/^#[0-9A-F]{6}$/i, "Invalid color format"),
-  secondaryColor: zod.z.string().regex(/^#[0-9A-F]{6}$/i, "Invalid color format")
+var SuccessResponseSchema = zod.z.object({
+  success: zod.z.literal(true),
+  message: zod.z.string(),
+  data: zod.z.unknown().optional(),
+  timestamp: zod.z.date()
 });
 
-exports.apiResponseSchema = apiResponseSchema;
-exports.contactFormSchema = contactFormSchema;
-exports.createUserSchema = createUserSchema;
-exports.loginSchema = loginSchema;
-exports.paginatedResponseSchema = paginatedResponseSchema;
-exports.registerSchema = registerSchema;
-exports.themeConfigSchema = themeConfigSchema;
-exports.updateUserSchema = updateUserSchema;
-exports.userSchema = userSchema;
+exports.ApiResponseSchema = ApiResponseSchema;
+exports.CreateProductSchema = CreateProductSchema;
+exports.CreateUserSchema = CreateUserSchema;
+exports.ErrorResponseSchema = ErrorResponseSchema;
+exports.PaginatedResponseSchema = PaginatedResponseSchema;
+exports.PaginationSchema = PaginationSchema;
+exports.ProductFilterSchema = ProductFilterSchema;
+exports.ProductSchema = ProductSchema;
+exports.SuccessResponseSchema = SuccessResponseSchema;
+exports.UpdateProductSchema = UpdateProductSchema;
+exports.UpdateUserSchema = UpdateUserSchema;
+exports.UserSchema = UserSchema;
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

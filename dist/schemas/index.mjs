@@ -1,62 +1,103 @@
 import { z } from 'zod';
 
-// src/schemas/index.ts
-var userSchema = z.object({
+// src/schemas/user.schema.ts
+var UserSchema = z.object({
   id: z.string().uuid(),
-  email: z.string().email(),
-  name: z.string().min(2).max(50),
+  email: z.string().email("Invalid email address"),
+  username: z.string().min(3, "Username must be at least 3 characters").max(20, "Username must be at most 20 characters"),
+  fullName: z.string().min(1, "Full name is required").max(100, "Full name must be at most 100 characters"),
   avatar: z.string().url().optional(),
-  role: z.enum(["admin", "user", "moderator"]),
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime()
+  role: z.enum(["admin", "user", "moderator"]).default("user"),
+  isActive: z.boolean().default(true),
+  createdAt: z.date(),
+  updatedAt: z.date()
 });
-var createUserSchema = userSchema.omit({
+var CreateUserSchema = UserSchema.omit({
   id: true,
   createdAt: true,
   updatedAt: true
 });
-var updateUserSchema = createUserSchema.partial();
-var loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters")
+var UpdateUserSchema = UserSchema.partial().omit({
+  id: true,
+  createdAt: true
 });
-var registerSchema = loginSchema.extend({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"]
+var ProductSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1, "Product name is required").max(200, "Product name must be at most 200 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters").max(1e3, "Description must be at most 1000 characters"),
+  price: z.number().positive("Price must be positive"),
+  currency: z.enum(["USD", "EUR", "VND"]).default("USD"),
+  category: z.string().min(1, "Category is required"),
+  tags: z.array(z.string()).default([]),
+  images: z.array(z.string().url()).default([]),
+  inStock: z.boolean().default(true),
+  stockQuantity: z.number().int().min(0, "Stock quantity must be non-negative").default(0),
+  weight: z.number().positive().optional(),
+  dimensions: z.object({
+    length: z.number().positive(),
+    width: z.number().positive(),
+    height: z.number().positive()
+  }).optional(),
+  isActive: z.boolean().default(true),
+  createdAt: z.date(),
+  updatedAt: z.date()
 });
-var apiResponseSchema = (dataSchema) => z.object({
-  data: dataSchema,
-  message: z.string(),
+var CreateProductSchema = ProductSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+var UpdateProductSchema = ProductSchema.partial().omit({
+  id: true,
+  createdAt: true
+});
+var ProductFilterSchema = z.object({
+  category: z.string().optional(),
+  minPrice: z.number().positive().optional(),
+  maxPrice: z.number().positive().optional(),
+  inStock: z.boolean().optional(),
+  tags: z.array(z.string()).optional()
+});
+var ApiResponseSchema = z.object({
   success: z.boolean(),
-  error: z.string().optional()
-});
-var paginatedResponseSchema = (itemSchema) => z.object({
-  data: z.array(itemSchema),
   message: z.string(),
-  success: z.boolean(),
-  error: z.string().optional(),
-  pagination: z.object({
-    page: z.number().int().positive(),
-    limit: z.number().int().positive(),
-    total: z.number().int().nonnegative(),
-    totalPages: z.number().int().nonnegative()
+  data: z.unknown().optional(),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.unknown().optional()
+  }).optional(),
+  timestamp: z.date()
+});
+var PaginationSchema = z.object({
+  page: z.number().int().min(1, "Page must be at least 1").default(1),
+  limit: z.number().int().min(1, "Limit must be at least 1").max(100, "Limit must be at most 100").default(10),
+  total: z.number().int().min(0, "Total must be non-negative"),
+  totalPages: z.number().int().min(0, "Total pages must be non-negative")
+});
+var PaginatedResponseSchema = ApiResponseSchema.extend({
+  data: z.object({
+    items: z.array(z.unknown()),
+    pagination: PaginationSchema
   })
 });
-var contactFormSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  subject: z.string().min(5, "Subject must be at least 5 characters"),
-  message: z.string().min(10, "Message must be at least 10 characters")
+var ErrorResponseSchema = z.object({
+  success: z.literal(false),
+  message: z.string(),
+  error: z.object({
+    code: z.string(),
+    message: z.string(),
+    details: z.unknown().optional()
+  }),
+  timestamp: z.date()
 });
-var themeConfigSchema = z.object({
-  theme: z.enum(["light", "dark", "system"]),
-  primaryColor: z.string().regex(/^#[0-9A-F]{6}$/i, "Invalid color format"),
-  secondaryColor: z.string().regex(/^#[0-9A-F]{6}$/i, "Invalid color format")
+var SuccessResponseSchema = z.object({
+  success: z.literal(true),
+  message: z.string(),
+  data: z.unknown().optional(),
+  timestamp: z.date()
 });
 
-export { apiResponseSchema, contactFormSchema, createUserSchema, loginSchema, paginatedResponseSchema, registerSchema, themeConfigSchema, updateUserSchema, userSchema };
+export { ApiResponseSchema, CreateProductSchema, CreateUserSchema, ErrorResponseSchema, PaginatedResponseSchema, PaginationSchema, ProductFilterSchema, ProductSchema, SuccessResponseSchema, UpdateProductSchema, UpdateUserSchema, UserSchema };
 //# sourceMappingURL=index.mjs.map
 //# sourceMappingURL=index.mjs.map

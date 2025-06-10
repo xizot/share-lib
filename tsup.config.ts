@@ -1,18 +1,26 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: {
-    'index': 'src/index.ts',
-    'components/index': 'src/components/index.ts',
-    'types/index': 'src/types/index.ts',
-    'schemas/index': 'src/schemas/index.ts',
-    'utils/index': 'src/utils/index.ts',
-  },
-  format: ['cjs', 'esm'],
+  entry: [
+    'src/index.ts',
+    'src/schemas/index.ts',
+    'src/lib/index.ts',
+    'src/components/index.ts'
+  ],
+  format: ['esm', 'cjs'],
   dts: true,
-  splitting: false,
-  sourcemap: true,
   clean: true,
-  external: ['react', 'react-dom'],
+  sourcemap: true,
   treeshake: true,
-}) 
+  splitting: false,
+  outDir: 'dist',
+  external: [
+    'react',
+    'react-dom',
+    '@radix-ui/react-slot',
+    'class-variance-authority',
+    'clsx',
+    'tailwind-merge',
+    'zod'
+  ]
+})

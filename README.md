@@ -1,216 +1,121 @@
-# Share Lib
+# @vm/share-lib
 
-A shared TypeScript library containing reusable components, types, schemas, and utilities for Next.js projects.
+Shared library with Zod schemas, utilities, and UI components for React applications.
 
-## 🚀 Features
-
-- **React Components**: Pre-built, customizable UI components
-- **TypeScript Types**: Common type definitions for consistent typing
-- **Zod Schemas**: Validation schemas for forms and API responses
-- **Utility Functions**: Helper functions for common operations
-- **Tree-shakeable**: Import only what you need
-- **TypeScript Ready**: Full TypeScript support with type definitions
-
-## 📦 Installation
-
-### From GitHub (Recommended for private repos)
+## Installation
 
 ```bash
-npm install git+https://github.com/your-username/share-lib.git
+yarn add @vm/share-lib
 # or
-yarn add git+https://github.com/your-username/share-lib.git
-# or
-pnpm add git+https://github.com/your-username/share-lib.git
+npm install @vm/share-lib
 ```
 
-### From npm (if published)
+## Features
 
-```bash
-npm install @your-org/share-lib
-# or
-yarn add @your-org/share-lib
-# or
-pnpm add @your-org/share-lib
-```
+- 🔧 **Zod Schemas**: Pre-built validation schemas for common entities
+- 🛠️ **Utilities**: Helper functions for common operations  
+- 🎨 **UI Components**: React components with Tailwind CSS styling
+- 📦 **TypeScript**: Full TypeScript support with type definitions
+- 🌳 **Tree-shakable**: Only import what you need
 
-## 🛠 Usage
+## Usage
 
-### Components
-
-```tsx
-import { Button, Card, Modal } from '@your-org/share-lib/components'
-
-function App() {
-  return (
-    <Card padding="lg" shadow="md">
-      <Button variant="primary" size="md">
-        Click me
-      </Button>
-    </Card>
-  )
-}
-```
-
-### Types
+### Import Everything
 
 ```typescript
-import { User, ApiResponse, NavItem } from '@your-org/share-lib/types'
+import { UserSchema, ProductSchema, Button, formatPrice } from '@vm/share-lib';
+```
 
-const user: User = {
-  id: '1',
-  email: 'user@example.com',
-  name: 'John Doe',
-  role: 'user',
-  createdAt: '2024-01-01T00:00:00.000Z',
-  updatedAt: '2024-01-01T00:00:00.000Z'
-}
+### Import Specific Modules
+
+```typescript
+// Import only schemas
+import { UserSchema, ProductSchema, ApiResponseSchema } from '@vm/share-lib/schemas';
+
+// Import only utilities
+import { formatPrice, slugify, debounce } from '@vm/share-lib/lib';
+
+// Import only components
+import { Button } from '@vm/share-lib/components';
 ```
 
 ### Schemas
 
 ```typescript
-import { loginSchema, userSchema } from '@your-org/share-lib/schemas'
-
-// Validate login form
-const loginData = loginSchema.parse({
-  email: 'user@example.com',
-  password: 'password123'
-})
+import { UserSchema, ProductSchema, ApiResponseSchema } from '@vm/share-lib/schemas';
 
 // Validate user data
-const userData = userSchema.parse(apiResponse.data)
+const user = UserSchema.parse({
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  email: 'user@example.com',
+  username: 'johndoe',
+  fullName: 'John Doe',
+  role: 'user'
+});
 ```
 
-### Utils
+### Validation Utilities
 
 ```typescript
-import { formatDate, debounce, storage } from '@your-org/share-lib/utils'
+import { validateSchema, createSuccessResponse, ValidationError } from '@vm/share-lib/lib';
 
-// Format dates
-const formatted = formatDate(new Date(), 'long')
+// Safe validation
+const result = validateSchema(UserSchema, userData);
+if (result.success) {
+  console.log(result.data);
+} else {
+  console.error(result.error);
+}
 
-// Debounce function calls
-const debouncedSearch = debounce(searchFunction, 300)
-
-// Local storage utilities
-storage.set('user', userData)
-const user = storage.get('user')
+// Create API responses
+const response = createSuccessResponse('User created successfully', user);
 ```
 
-## 📁 Project Structure
+### Helper Functions
 
-```
-src/
-├── components/          # React components
-│   ├── Button.tsx
-│   ├── Card.tsx
-│   ├── Modal.tsx
-│   └── index.ts
-├── types/              # TypeScript type definitions
-│   └── index.ts
-├── schemas/            # Zod validation schemas
-│   └── index.ts
-├── utils/              # Utility functions
-│   └── index.ts
-└── index.ts           # Main entry point
+```typescript
+import { formatPrice, slugify, debounce, formatDate } from '@vm/share-lib/lib';
+
+// Format currency
+const price = formatPrice(1999.99, 'USD'); // "$1,999.99"
+
+// Create slugs
+const slug = slugify('Hello World!'); // "hello-world"
+
+// Debounce functions
+const debouncedSave = debounce(saveFunction, 500);
 ```
 
-## 🔧 Development
+### UI Components
 
-### Prerequisites
+```typescript
+import { Button } from '@vm/share-lib/components';
 
-- Node.js 18+
-- npm/yarn/pnpm
+function App() {
+  return (
+    <Button variant="default" size="lg">
+      Click me
+    </Button>
+  );
+}
+```
 
-### Setup
+## Development
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/share-lib.git
-cd share-lib
-
 # Install dependencies
-npm install
+yarn install
 
 # Build the library
-npm run build
+yarn build
 
-# Watch for changes during development
-npm run dev
+# Watch mode during development
+yarn dev
+
+# Type checking
+yarn type-check
 ```
 
-### Scripts
+## License
 
-- `npm run build` - Build the library for production
-- `npm run dev` - Build in watch mode for development
-- `npm run clean` - Clean the dist directory
-- `npm run type-check` - Run TypeScript type checking
-
-## 📝 Adding New Components
-
-1. Create your component in `src/components/YourComponent.tsx`
-2. Export it from `src/components/index.ts`
-3. Add any new types to `src/types/index.ts`
-4. Update the main exports in `src/index.ts`
-
-Example:
-
-```tsx
-// src/components/Input.tsx
-import React from 'react'
-
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  error?: string
-}
-
-export const Input: React.FC<InputProps> = ({ label, error, ...props }) => {
-  return (
-    <div>
-      {label && <label>{label}</label>}
-      <input {...props} />
-      {error && <span className="error">{error}</span>}
-    </div>
-  )
-}
-```
-
-```typescript
-// src/components/index.ts
-export { Input } from './Input'
-export type { InputProps } from './Input'
-```
-
-## 🚢 Publishing
-
-### To GitHub Packages
-
-1. Update version in `package.json`
-2. Commit and push changes
-3. Create a new release/tag on GitHub
-
-### To npm Registry
-
-```bash
-npm run build
-npm publish
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Update documentation
-6. Create a pull request
-
-## 📄 License
-
-MIT
-
-## 🔗 Links
-
-- [Repository](https://github.com/your-username/share-lib)
-- [Issues](https://github.com/your-username/share-lib/issues)
-- [Changelog](https://github.com/your-username/share-lib/releases) 
+MIT 

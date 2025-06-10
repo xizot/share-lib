@@ -1,207 +1,312 @@
 import { z } from 'zod';
+export { b as ApiResponse, A as ApiResponseSchema, e as ErrorResponse, E as ErrorResponseSchema, c as PaginatedResponse, a as PaginatedResponseSchema, d as Pagination, P as PaginationSchema, f as SuccessResponse, S as SuccessResponseSchema } from '../api.schema-BN4JtsXa.js';
 
-declare const userSchema: z.ZodObject<{
+declare const UserSchema: z.ZodObject<{
     id: z.ZodString;
     email: z.ZodString;
-    name: z.ZodString;
+    username: z.ZodString;
+    fullName: z.ZodString;
     avatar: z.ZodOptional<z.ZodString>;
-    role: z.ZodEnum<["admin", "user", "moderator"]>;
-    createdAt: z.ZodString;
-    updatedAt: z.ZodString;
+    role: z.ZodDefault<z.ZodEnum<["admin", "user", "moderator"]>>;
+    isActive: z.ZodDefault<z.ZodBoolean>;
+    createdAt: z.ZodDate;
+    updatedAt: z.ZodDate;
 }, "strip", z.ZodTypeAny, {
-    email: string;
-    name: string;
     id: string;
+    email: string;
+    username: string;
+    fullName: string;
     role: "admin" | "user" | "moderator";
-    createdAt: string;
-    updatedAt: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
     avatar?: string | undefined;
 }, {
-    email: string;
-    name: string;
     id: string;
-    role: "admin" | "user" | "moderator";
-    createdAt: string;
-    updatedAt: string;
+    email: string;
+    username: string;
+    fullName: string;
+    createdAt: Date;
+    updatedAt: Date;
     avatar?: string | undefined;
+    role?: "admin" | "user" | "moderator" | undefined;
+    isActive?: boolean | undefined;
 }>;
-declare const createUserSchema: z.ZodObject<Omit<{
+declare const CreateUserSchema: z.ZodObject<Omit<{
     id: z.ZodString;
     email: z.ZodString;
-    name: z.ZodString;
+    username: z.ZodString;
+    fullName: z.ZodString;
     avatar: z.ZodOptional<z.ZodString>;
-    role: z.ZodEnum<["admin", "user", "moderator"]>;
-    createdAt: z.ZodString;
-    updatedAt: z.ZodString;
+    role: z.ZodDefault<z.ZodEnum<["admin", "user", "moderator"]>>;
+    isActive: z.ZodDefault<z.ZodBoolean>;
+    createdAt: z.ZodDate;
+    updatedAt: z.ZodDate;
 }, "id" | "createdAt" | "updatedAt">, "strip", z.ZodTypeAny, {
     email: string;
-    name: string;
+    username: string;
+    fullName: string;
     role: "admin" | "user" | "moderator";
+    isActive: boolean;
     avatar?: string | undefined;
 }, {
     email: string;
-    name: string;
-    role: "admin" | "user" | "moderator";
+    username: string;
+    fullName: string;
     avatar?: string | undefined;
+    role?: "admin" | "user" | "moderator" | undefined;
+    isActive?: boolean | undefined;
 }>;
-declare const updateUserSchema: z.ZodObject<{
+declare const UpdateUserSchema: z.ZodObject<Omit<{
+    id: z.ZodOptional<z.ZodString>;
     email: z.ZodOptional<z.ZodString>;
-    name: z.ZodOptional<z.ZodString>;
-    role: z.ZodOptional<z.ZodEnum<["admin", "user", "moderator"]>>;
+    username: z.ZodOptional<z.ZodString>;
+    fullName: z.ZodOptional<z.ZodString>;
     avatar: z.ZodOptional<z.ZodOptional<z.ZodString>>;
-}, "strip", z.ZodTypeAny, {
+    role: z.ZodOptional<z.ZodDefault<z.ZodEnum<["admin", "user", "moderator"]>>>;
+    isActive: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+    createdAt: z.ZodOptional<z.ZodDate>;
+    updatedAt: z.ZodOptional<z.ZodDate>;
+}, "id" | "createdAt">, "strip", z.ZodTypeAny, {
     email?: string | undefined;
-    name?: string | undefined;
-    role?: "admin" | "user" | "moderator" | undefined;
+    username?: string | undefined;
+    fullName?: string | undefined;
     avatar?: string | undefined;
+    role?: "admin" | "user" | "moderator" | undefined;
+    isActive?: boolean | undefined;
+    updatedAt?: Date | undefined;
 }, {
     email?: string | undefined;
-    name?: string | undefined;
-    role?: "admin" | "user" | "moderator" | undefined;
+    username?: string | undefined;
+    fullName?: string | undefined;
     avatar?: string | undefined;
+    role?: "admin" | "user" | "moderator" | undefined;
+    isActive?: boolean | undefined;
+    updatedAt?: Date | undefined;
 }>;
-declare const loginSchema: z.ZodObject<{
-    email: z.ZodString;
-    password: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    email: string;
-    password: string;
-}, {
-    email: string;
-    password: string;
-}>;
-declare const registerSchema: z.ZodEffects<z.ZodObject<{
-    email: z.ZodString;
-    password: z.ZodString;
-} & {
-    name: z.ZodString;
-    confirmPassword: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    email: string;
-    password: string;
-    name: string;
-    confirmPassword: string;
-}, {
-    email: string;
-    password: string;
-    name: string;
-    confirmPassword: string;
-}>, {
-    email: string;
-    password: string;
-    name: string;
-    confirmPassword: string;
-}, {
-    email: string;
-    password: string;
-    name: string;
-    confirmPassword: string;
-}>;
-declare const apiResponseSchema: <T extends z.ZodTypeAny>(dataSchema: T) => z.ZodObject<{
-    data: T;
-    message: z.ZodString;
-    success: z.ZodBoolean;
-    error: z.ZodOptional<z.ZodString>;
-}, "strip", z.ZodTypeAny, z.objectUtil.addQuestionMarks<z.baseObjectOutputType<{
-    data: T;
-    message: z.ZodString;
-    success: z.ZodBoolean;
-    error: z.ZodOptional<z.ZodString>;
-}>, any> extends infer T_1 ? { [k in keyof T_1]: z.objectUtil.addQuestionMarks<z.baseObjectOutputType<{
-    data: T;
-    message: z.ZodString;
-    success: z.ZodBoolean;
-    error: z.ZodOptional<z.ZodString>;
-}>, any>[k]; } : never, z.baseObjectInputType<{
-    data: T;
-    message: z.ZodString;
-    success: z.ZodBoolean;
-    error: z.ZodOptional<z.ZodString>;
-}> extends infer T_2 ? { [k_1 in keyof T_2]: z.baseObjectInputType<{
-    data: T;
-    message: z.ZodString;
-    success: z.ZodBoolean;
-    error: z.ZodOptional<z.ZodString>;
-}>[k_1]; } : never>;
-declare const paginatedResponseSchema: <T extends z.ZodTypeAny>(itemSchema: T) => z.ZodObject<{
-    data: z.ZodArray<T, "many">;
-    message: z.ZodString;
-    success: z.ZodBoolean;
-    error: z.ZodOptional<z.ZodString>;
-    pagination: z.ZodObject<{
-        page: z.ZodNumber;
-        limit: z.ZodNumber;
-        total: z.ZodNumber;
-        totalPages: z.ZodNumber;
-    }, "strip", z.ZodTypeAny, {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    }, {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    }>;
-}, "strip", z.ZodTypeAny, {
-    message: string;
-    data: T["_output"][];
-    success: boolean;
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    };
-    error?: string | undefined;
-}, {
-    message: string;
-    data: T["_input"][];
-    success: boolean;
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    };
-    error?: string | undefined;
-}>;
-declare const contactFormSchema: z.ZodObject<{
-    name: z.ZodString;
-    email: z.ZodString;
-    subject: z.ZodString;
-    message: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    email: string;
-    name: string;
-    message: string;
-    subject: string;
-}, {
-    email: string;
-    name: string;
-    message: string;
-    subject: string;
-}>;
-declare const themeConfigSchema: z.ZodObject<{
-    theme: z.ZodEnum<["light", "dark", "system"]>;
-    primaryColor: z.ZodString;
-    secondaryColor: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    theme: "light" | "dark" | "system";
-    primaryColor: string;
-    secondaryColor: string;
-}, {
-    theme: "light" | "dark" | "system";
-    primaryColor: string;
-    secondaryColor: string;
-}>;
-type UserSchema = z.infer<typeof userSchema>;
-type CreateUserSchema = z.infer<typeof createUserSchema>;
-type UpdateUserSchema = z.infer<typeof updateUserSchema>;
-type LoginSchema = z.infer<typeof loginSchema>;
-type RegisterSchema = z.infer<typeof registerSchema>;
-type ContactFormSchema = z.infer<typeof contactFormSchema>;
-type ThemeConfigSchema = z.infer<typeof themeConfigSchema>;
+type User = z.infer<typeof UserSchema>;
+type CreateUser = z.infer<typeof CreateUserSchema>;
+type UpdateUser = z.infer<typeof UpdateUserSchema>;
 
-export { type ContactFormSchema, type CreateUserSchema, type LoginSchema, type RegisterSchema, type ThemeConfigSchema, type UpdateUserSchema, type UserSchema, apiResponseSchema, contactFormSchema, createUserSchema, loginSchema, paginatedResponseSchema, registerSchema, themeConfigSchema, updateUserSchema, userSchema };
+declare const ProductSchema: z.ZodObject<{
+    id: z.ZodString;
+    name: z.ZodString;
+    description: z.ZodString;
+    price: z.ZodNumber;
+    currency: z.ZodDefault<z.ZodEnum<["USD", "EUR", "VND"]>>;
+    category: z.ZodString;
+    tags: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    images: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    inStock: z.ZodDefault<z.ZodBoolean>;
+    stockQuantity: z.ZodDefault<z.ZodNumber>;
+    weight: z.ZodOptional<z.ZodNumber>;
+    dimensions: z.ZodOptional<z.ZodObject<{
+        length: z.ZodNumber;
+        width: z.ZodNumber;
+        height: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        length: number;
+        width: number;
+        height: number;
+    }, {
+        length: number;
+        width: number;
+        height: number;
+    }>>;
+    isActive: z.ZodDefault<z.ZodBoolean>;
+    createdAt: z.ZodDate;
+    updatedAt: z.ZodDate;
+}, "strip", z.ZodTypeAny, {
+    id: string;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    name: string;
+    description: string;
+    price: number;
+    currency: "USD" | "EUR" | "VND";
+    category: string;
+    tags: string[];
+    images: string[];
+    inStock: boolean;
+    stockQuantity: number;
+    weight?: number | undefined;
+    dimensions?: {
+        length: number;
+        width: number;
+        height: number;
+    } | undefined;
+}, {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    isActive?: boolean | undefined;
+    currency?: "USD" | "EUR" | "VND" | undefined;
+    tags?: string[] | undefined;
+    images?: string[] | undefined;
+    inStock?: boolean | undefined;
+    stockQuantity?: number | undefined;
+    weight?: number | undefined;
+    dimensions?: {
+        length: number;
+        width: number;
+        height: number;
+    } | undefined;
+}>;
+declare const CreateProductSchema: z.ZodObject<Omit<{
+    id: z.ZodString;
+    name: z.ZodString;
+    description: z.ZodString;
+    price: z.ZodNumber;
+    currency: z.ZodDefault<z.ZodEnum<["USD", "EUR", "VND"]>>;
+    category: z.ZodString;
+    tags: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    images: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    inStock: z.ZodDefault<z.ZodBoolean>;
+    stockQuantity: z.ZodDefault<z.ZodNumber>;
+    weight: z.ZodOptional<z.ZodNumber>;
+    dimensions: z.ZodOptional<z.ZodObject<{
+        length: z.ZodNumber;
+        width: z.ZodNumber;
+        height: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        length: number;
+        width: number;
+        height: number;
+    }, {
+        length: number;
+        width: number;
+        height: number;
+    }>>;
+    isActive: z.ZodDefault<z.ZodBoolean>;
+    createdAt: z.ZodDate;
+    updatedAt: z.ZodDate;
+}, "id" | "createdAt" | "updatedAt">, "strip", z.ZodTypeAny, {
+    isActive: boolean;
+    name: string;
+    description: string;
+    price: number;
+    currency: "USD" | "EUR" | "VND";
+    category: string;
+    tags: string[];
+    images: string[];
+    inStock: boolean;
+    stockQuantity: number;
+    weight?: number | undefined;
+    dimensions?: {
+        length: number;
+        width: number;
+        height: number;
+    } | undefined;
+}, {
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    isActive?: boolean | undefined;
+    currency?: "USD" | "EUR" | "VND" | undefined;
+    tags?: string[] | undefined;
+    images?: string[] | undefined;
+    inStock?: boolean | undefined;
+    stockQuantity?: number | undefined;
+    weight?: number | undefined;
+    dimensions?: {
+        length: number;
+        width: number;
+        height: number;
+    } | undefined;
+}>;
+declare const UpdateProductSchema: z.ZodObject<Omit<{
+    id: z.ZodOptional<z.ZodString>;
+    name: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+    price: z.ZodOptional<z.ZodNumber>;
+    currency: z.ZodOptional<z.ZodDefault<z.ZodEnum<["USD", "EUR", "VND"]>>>;
+    category: z.ZodOptional<z.ZodString>;
+    tags: z.ZodOptional<z.ZodDefault<z.ZodArray<z.ZodString, "many">>>;
+    images: z.ZodOptional<z.ZodDefault<z.ZodArray<z.ZodString, "many">>>;
+    inStock: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+    stockQuantity: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    weight: z.ZodOptional<z.ZodOptional<z.ZodNumber>>;
+    dimensions: z.ZodOptional<z.ZodOptional<z.ZodObject<{
+        length: z.ZodNumber;
+        width: z.ZodNumber;
+        height: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        length: number;
+        width: number;
+        height: number;
+    }, {
+        length: number;
+        width: number;
+        height: number;
+    }>>>;
+    isActive: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
+    createdAt: z.ZodOptional<z.ZodDate>;
+    updatedAt: z.ZodOptional<z.ZodDate>;
+}, "id" | "createdAt">, "strip", z.ZodTypeAny, {
+    isActive?: boolean | undefined;
+    updatedAt?: Date | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    price?: number | undefined;
+    currency?: "USD" | "EUR" | "VND" | undefined;
+    category?: string | undefined;
+    tags?: string[] | undefined;
+    images?: string[] | undefined;
+    inStock?: boolean | undefined;
+    stockQuantity?: number | undefined;
+    weight?: number | undefined;
+    dimensions?: {
+        length: number;
+        width: number;
+        height: number;
+    } | undefined;
+}, {
+    isActive?: boolean | undefined;
+    updatedAt?: Date | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    price?: number | undefined;
+    currency?: "USD" | "EUR" | "VND" | undefined;
+    category?: string | undefined;
+    tags?: string[] | undefined;
+    images?: string[] | undefined;
+    inStock?: boolean | undefined;
+    stockQuantity?: number | undefined;
+    weight?: number | undefined;
+    dimensions?: {
+        length: number;
+        width: number;
+        height: number;
+    } | undefined;
+}>;
+declare const ProductFilterSchema: z.ZodObject<{
+    category: z.ZodOptional<z.ZodString>;
+    minPrice: z.ZodOptional<z.ZodNumber>;
+    maxPrice: z.ZodOptional<z.ZodNumber>;
+    inStock: z.ZodOptional<z.ZodBoolean>;
+    tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+}, "strip", z.ZodTypeAny, {
+    category?: string | undefined;
+    tags?: string[] | undefined;
+    inStock?: boolean | undefined;
+    minPrice?: number | undefined;
+    maxPrice?: number | undefined;
+}, {
+    category?: string | undefined;
+    tags?: string[] | undefined;
+    inStock?: boolean | undefined;
+    minPrice?: number | undefined;
+    maxPrice?: number | undefined;
+}>;
+type Product = z.infer<typeof ProductSchema>;
+type CreateProduct = z.infer<typeof CreateProductSchema>;
+type UpdateProduct = z.infer<typeof UpdateProductSchema>;
+type ProductFilter = z.infer<typeof ProductFilterSchema>;
+
+export { type CreateProduct, CreateProductSchema, type CreateUser, CreateUserSchema, type Product, type ProductFilter, ProductFilterSchema, ProductSchema, type UpdateProduct, UpdateProductSchema, type UpdateUser, UpdateUserSchema, type User, UserSchema };
