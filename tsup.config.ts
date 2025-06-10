@@ -13,6 +13,7 @@ export default defineConfig({
   minify: true,
   treeshake: true,
   splitting: false,
+  bundle: false,
   outDir: 'dist',
   external: [
     'react',
