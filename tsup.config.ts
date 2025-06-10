@@ -9,11 +9,10 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,
-  sourcemap: true,
+  sourcemap: false,
   minify: true,
   treeshake: true,
   splitting: false,
-  bundle: false,
   outDir: 'dist',
   external: [
     'react',
